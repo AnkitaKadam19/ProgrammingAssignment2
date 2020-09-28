@@ -1,15 +1,51 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Function name: makeCacheMatrix 
+## Description: The function 'makeCacheMatrix' creates a special type of vector, composed by 
+##				functions to:
+##					-> set the value of the matrix;
+##					-> get the value of the matrix;
+##					-> set the value of the inverse matrix (cache);
+##					-> get the value of the inverse matrix.
+##Parameters:
+##	-> origmat: a matrix to store/calculate its inverse.
 
-## Write a short comment describing this function
-
-makeCacheMatrix <- function(x = matrix()) {
-
+makeCacheMatrix <- function(origmat = matrix()) {
+	invmat <- NULL
+	
+	setmat <- function(mat){
+		origmat <<- mat
+		invmat <<- NULL
+	}
+	
+	getmat <- function(){
+		origmat
+	}
+	
+	setinv <- function(inv){
+		invmat <<- inv
+	}
+	
+	getinv <- function(){
+		invmat
+	}
+	
+	list (setmat = setmat, getmat = getmat, setinv = setinv, getinv = getinv)
 }
 
 
-## Write a short comment describing this function
+## Function name: cacheSolve 
+## Description: The function 'cacheSolve' returns a matrix that is the inverse of 'x'
+##Parameters:
+##	-> x: a special vector composed by functions to get/set a matrix
+##		  and to get/set its inverse.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+		invmat <- x$getinv()
+        if(!is.null(invmat)) {
+                message("getting cached inverse matrix")
+                return(invmat)
+        }
+        origmat <- x$getmat()
+        invmat <- solve(origmat, ...)
+        x$setinv(invmat)
+        invmat
 }
